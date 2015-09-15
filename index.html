@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+
+
+  <p id="parrafo"></p>
+
+  <input id="mensaje"></input>  <input type="button" id="boton" value="send message"></input>
+  <div id="muro de facebook"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script>
+
+    var socket = io.connect('/'); //it's not a path, but a websocket namespace
+
+    socket.on('connect', function() {
+      console.log('connected');
+    });
+
+    socket.on('disconnect', function() {
+      console.log('disconnected');
+    });
+
+    socket.on('grito', function(num) {
+      document.getElementById('parrafo').innerHTML = 'websocket: ' + num;
+    });
+
+    socket.on("mensaje a muro de facebook", function(msg) {
+      document.getElementById("muro de facebook").innerHTML += msg + "<br>";
+    });
+
+    document.getElementById("boton").addEventListener("click", function(evt) {
+      var msg = document.getElementById("mensaje").value;
+      if(msg) {
+        socket.emit("mensaje a servidor", msg);
+        document.getElementById("muro de facebook").innerHTML += msg + "<br>";
+        document.getElementById("mensaje").value = "";
+      }
+    }, false);
+
+
+  </script>
+
+</body>
+</html>
